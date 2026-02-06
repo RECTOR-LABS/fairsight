@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model CachedFairScore {
+  id        String   @id @default(cuid())
+  wallet    String   @unique
+  score     Float
+  tier      Int // 0=unrated, 1=bronze, 2=silver, 3=gold, 4=platinum
+  tierLabel String
+  details   Json? // raw FairScale response
+  fetchedAt DateTime @default(now())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([wallet])
+  @@index([expiresAt])
+  @@map("cached_fairscores")
+}
+
+model CachedTokenReport {
+  id             String   @id @default(cuid())
+  mint           String   @unique
+  report         Json // full assembled report
+  fairsightScore Float
+  grade          String
+  fetchedAt      DateTime @default(now())
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([mint])
+  @@index([expiresAt])
+  @@map("cached_token_reports")
+}
+
+model DeployerHistory {
+  id             String    @id @default(cuid())
+  deployerWallet String
+  tokenMint      String
+  tokenName      String?
+  tokenSymbol    String?
+  launchDate     DateTime?
+  currentStatus  String? // "active", "dead", "rugged", "unknown"
+  peakMcap       Float?
+  currentMcap    Float?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([deployerWallet, tokenMint])
+  @@index([deployerWallet])
+  @@map("deployer_history")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  wallet        String    @unique
+  fairScore     Float?
+  fairScoreTier Int       @default(0)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  reviews        Review[]
+  watchlistItems WatchlistItem[]
+
+  @@index([wallet])
+  @@map("users")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenMint String
+  rating    Int // 1-5
+  comment   String?
+  weight    Float    @default(1.0) // derived from tier
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tokenMint])
+  @@index([tokenMint])
+  @@map("reviews")
+}
+
+model WatchlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenMint String
+  addedAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tokenMint])
+  @@index([userId])
+  @@map("watchlist_items")
+}
+
+model SearchLog {
+  id        String   @id @default(cuid())
+  tokenMint String
+  query     String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([tokenMint])
+  @@index([createdAt])
+  @@map("search_log")
+}
+
+model ApiUsageLog {
+  id        String   @id @default(cuid())
+  provider  String // "fairscale", "helius", "jupiter", "rugcheck", "goplus"
+  endpoint  String
+  success   Boolean
+  latencyMs Int?
+  date      String // YYYY-MM-DD for daily aggregation
+  createdAt DateTime @default(now())
+
+  @@index([provider, date])
+  @@map("api_usage_log")
+}
