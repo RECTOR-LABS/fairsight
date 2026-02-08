@@ -8,6 +8,7 @@ import SecurityFlags from '@/components/token/SecurityFlags';
 import MarketDataCard from '@/components/token/MarketDataCard';
 import HolderDistribution from '@/components/token/HolderDistribution';
 import ReviewForm from '@/components/token/ReviewForm';
+import WatchlistButton from '@/components/token/WatchlistButton';
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -64,7 +65,7 @@ export default function TokenReportPage({
             className="rounded-full"
           />
         )}
-        <div>
+        <div className="flex-1">
           <h1 className="text-2xl font-bold text-white">
             {report.name}{' '}
             <span className="text-zinc-500">({report.symbol})</span>
@@ -73,6 +74,7 @@ export default function TokenReportPage({
             {report.mint.slice(0, 8)}...{report.mint.slice(-8)}
           </p>
         </div>
+        <WatchlistButton tokenMint={mint} />
       </div>
 
       {/* Score */}
