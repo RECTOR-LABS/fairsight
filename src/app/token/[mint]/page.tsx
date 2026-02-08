@@ -7,6 +7,7 @@ import DeployerCard from '@/components/token/DeployerCard';
 import SecurityFlags from '@/components/token/SecurityFlags';
 import MarketDataCard from '@/components/token/MarketDataCard';
 import HolderDistribution from '@/components/token/HolderDistribution';
+import ReviewForm from '@/components/token/ReviewForm';
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,7 +18,7 @@ export default function TokenReportPage({
   params: Promise<{ mint: string }>;
 }) {
   const { mint } = use(params);
-  const { report, loading, error } = useTokenReport(mint);
+  const { report, loading, error, refetch } = useTokenReport(mint);
 
   if (loading) {
     return (
@@ -104,6 +105,10 @@ export default function TokenReportPage({
         <h3 className="mb-4 text-sm font-semibold text-white">
           Community Reviews ({report.reviews.count})
         </h3>
+
+        <div className="mb-4">
+          <ReviewForm tokenMint={mint} onSubmitted={refetch} />
+        </div>
 
         {report.reviews.count > 0 ? (
           <div className="space-y-3">
