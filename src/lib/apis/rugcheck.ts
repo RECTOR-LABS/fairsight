@@ -72,13 +72,16 @@ export function normalizeRugCheckScore(report: RugCheckReport | null): number {
 }
 
 export function extractInsiderPercent(report: RugCheckReport | null): number {
-  if (!report?.topHolders) return 0;
+  if (!report?.topHolders || !Array.isArray(report.topHolders)) return 0;
   return report.topHolders
     .filter((h) => h.insider)
-    .reduce((sum, h) => sum + h.pct, 0);
+    .reduce((sum, h) => sum + (Number(h.pct) || 0), 0);
 }
 
 export function extractLiquidity(report: RugCheckReport | null): number {
   if (!report?.markets?.length) return 0;
-  return report.markets.reduce((sum, m) => sum + m.liquidityA + m.liquidityB, 0);
+  return report.markets.reduce(
+    (sum, m) => sum + (Number(m.liquidityA) || 0) + (Number(m.liquidityB) || 0),
+    0,
+  );
 }

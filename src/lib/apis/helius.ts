@@ -7,7 +7,7 @@ function rpcUrl(): string {
   return `${HELIUS_URL}/?api-key=${API_KEY}`;
 }
 
-async function heliusRpc<T>(method: string, params: unknown[]): Promise<T | null> {
+async function heliusRpc<T>(method: string, params: unknown): Promise<T | null> {
   const start = Date.now();
   try {
     const res = await fetch(rpcUrl(), {
@@ -70,7 +70,7 @@ export interface HeliusAsset {
 }
 
 export async function getAsset(mint: string): Promise<HeliusAsset | null> {
-  return heliusRpc<HeliusAsset>('getAsset', [mint]);
+  return heliusRpc<HeliusAsset>('getAsset', { id: mint });
 }
 
 export interface HeliusTokenAccount {
@@ -94,7 +94,7 @@ export async function getTokenAccounts(
 ): Promise<HeliusTokenAccount[]> {
   const result = await heliusRpc<TokenAccountsResponse>(
     'getTokenAccounts',
-    [{ mint, limit, options: { showZeroBalance: false } }],
+    { mint, limit, options: { showZeroBalance: false } },
   );
   return result?.token_accounts ?? [];
 }
@@ -110,7 +110,7 @@ export async function getAssetsByAuthority(
 ): Promise<HeliusAsset[]> {
   const result = await heliusRpc<AssetsByAuthorityResponse>(
     'getAssetsByAuthority',
-    [{ authorityAddress: authority, limit }],
+    { authorityAddress: authority, limit },
   );
   return result?.items ?? [];
 }
@@ -129,7 +129,7 @@ export async function getSignaturesForAsset(
 ): Promise<SignatureInfo[]> {
   const result = await heliusRpc<SignatureInfo[]>(
     'getSignaturesForAsset',
-    [{ id: mint, limit }],
+    { id: mint, limit },
   );
   return result ?? [];
 }

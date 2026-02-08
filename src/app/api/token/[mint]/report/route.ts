@@ -168,20 +168,23 @@ async function buildReport(mint: string): Promise<TokenReport | null> {
     rugcheckRisks: rugcheck?.risks?.map((r) => `${r.level}: ${r.name} - ${r.description}`) ?? [],
     goPlusFlags,
     isHoneypot: goPlusFlags.some((f) => f.key === 'is_honeypot'),
-    hasMintAuthority: jupToken?.mint_authority !== null || false,
-    hasFreezeAuthority: jupToken?.freeze_authority !== null || false,
+    hasMintAuthority: !!(jupToken?.mint_authority ?? rugcheck?.mintAuthority),
+    hasFreezeAuthority: !!(jupToken?.freeze_authority ?? rugcheck?.freezeAuthority),
     topHolderPercent,
     insiderPercent: extractInsiderPercent(rugcheck),
   };
 
-  // Market data
-  const price = jupPrice ? parseFloat(jupPrice.price) : 0;
+  // Market data — Jupiter price with Helius fallback
+  const jupPriceValue = jupPrice ? (parseFloat(jupPrice.price) || 0) : 0;
+  const heliusPriceValue = heliusAsset?.token_info?.price_info?.price_per_token ?? 0;
+  const price = jupPriceValue || heliusPriceValue;
+  const decimals = heliusAsset?.token_info?.decimals ?? jupToken?.decimals ?? 9;
   const organicScore = deriveOrganicScore(jupPrice);
   const liquidity = extractLiquidity(rugcheck);
   const market: MarketData = {
     price,
     priceChange24h: 0,
-    marketCap: price * (totalSupply / Math.pow(10, jupToken?.decimals || 9)),
+    marketCap: totalSupply > 0 ? price * (totalSupply / Math.pow(10, decimals)) : 0,
     volume24h: jupToken?.daily_volume || 0,
     liquidity,
     jupiterOrganicScore: organicScore,
@@ -244,6 +247,8 @@ async function buildReport(mint: string): Promise<TokenReport | null> {
     reviews: dbReviews.map((r) => ({ rating: r.rating, weight: r.weight })),
   });
 
+  const finalScore = Number.isFinite(scoring.score) ? scoring.score : 0;
+
   return {
     mint,
     name,
@@ -252,7 +257,7 @@ async function buildReport(mint: string): Promise<TokenReport | null> {
     description,
     deployer: deployer || 'Unknown',
     deployerFairScore,
-    fairsightScore: scoring.score,
+    fairsightScore: finalScore,
     grade: scoring.grade,
     breakdown: scoring.breakdown,
     security,
