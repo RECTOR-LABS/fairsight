@@ -18,9 +18,9 @@
 - [x] Review system API (submit + weighted display)
 - [x] Embeddable SVG trust badge (/api/embed/[mint])
 - [x] GitHub repo (RECTOR-LABS/fairsight) + GitLab mirror + dual-push
-- [ ] **API keys**: FairScale + Helius — BLOCKING for live data
-- [ ] Test with real Solana tokens (end-to-end flow)
-- [ ] Fix any API response parsing issues with real data
+- [x] **API keys**: Helius configured (Jupiter now requires auth — using Helius price fallback)
+- [x] Test with real Solana tokens (BONK: Score 64/C, $559M mcap, 50 holders)
+- [x] Fix API response parsing issues (RugCheck string fields, Helius DAS params, NaN guards)
 - [x] Write tests for scoring algorithm (41 tests, 100% coverage on scoring module)
 
 ## Phase 2: Depth + Differentiation (Week 2: Feb 13-19)
