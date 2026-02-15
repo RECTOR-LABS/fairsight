@@ -2,10 +2,10 @@ export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
 import { getCached, setCached, CacheKeys, CacheTTL } from '@/lib/cache';
-import { prisma } from '@/lib/prisma';
 import { getFairScore } from '@/lib/apis/fairscale';
 import { getAssetsByAuthority } from '@/lib/apis/helius';
-import type { DeployerProfile, DeployerToken } from '@/types';
+import { enrichDeployerTokens } from '@/lib/deployer-scanner';
+import type { DeployerProfile } from '@/types';
 
 export async function GET(
   _req: Request,
@@ -28,47 +28,8 @@ export async function GET(
       getAssetsByAuthority(address, 100),
     ]);
 
-    // Get stored history
-    const storedHistory = await prisma.deployerHistory.findMany({
-      where: { deployerWallet: address },
-    });
-
-    // Build token list from Helius assets
-    const tokens: DeployerToken[] = assets.map((asset) => {
-      const stored = storedHistory.find((h) => h.tokenMint === asset.id);
-      return {
-        mint: asset.id,
-        name: asset.content?.metadata?.name || null,
-        symbol: asset.content?.metadata?.symbol || null,
-        launchDate: stored?.launchDate?.toISOString() || null,
-        status: stored?.currentStatus || 'unknown',
-        peakMcap: stored?.peakMcap || null,
-        currentMcap: stored?.currentMcap || null,
-      };
-    });
-
-    // Store/update history in DB
-    for (const token of tokens) {
-      await prisma.deployerHistory.upsert({
-        where: {
-          deployerWallet_tokenMint: {
-            deployerWallet: address,
-            tokenMint: token.mint,
-          },
-        },
-        update: {
-          tokenName: token.name,
-          tokenSymbol: token.symbol,
-        },
-        create: {
-          deployerWallet: address,
-          tokenMint: token.mint,
-          tokenName: token.name,
-          tokenSymbol: token.symbol,
-          currentStatus: 'unknown',
-        },
-      }).catch(() => {});
-    }
+    // Enrich tokens with real launch dates + statuses (budget-free APIs)
+    const tokens = await enrichDeployerTokens(address, assets);
 
     const activeTokens = tokens.filter((t) => t.status === 'active').length;
     const deadTokens = tokens.filter((t) => t.status === 'dead').length;
