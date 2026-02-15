@@ -37,8 +37,8 @@
 
 ## Phase 3: Polish + Ship (Week 3: Feb 20-27)
 - [ ] VPS deployment (Docker + nginx + certbot + GitHub Actions CI/CD)
-- [ ] OG images (dynamic per token)
-- [ ] SEO (meta tags, structured data, sitemap)
+- [x] OG images (dynamic per token)
+- [x] SEO (meta tags, structured data, sitemap)
 - [ ] Performance optimization (bundle size, lazy loading)
 - [ ] Demo video + pitch deck
 - [ ] X/Twitter account + content

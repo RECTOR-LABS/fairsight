@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import { Eye, Shield, Users, BarChart3, MessageSquare, Award } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'About — Methodology',
+  description: 'How FairSight calculates trust scores for Solana tokens. Learn about the 4-pillar scoring algorithm powered by FairScale reputation data.',
+};
 
 export default function AboutPage() {
   return (
