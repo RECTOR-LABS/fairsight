@@ -8,13 +8,22 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'FairSight — Token Trust Intelligence for Solana',
+  metadataBase: new URL('https://fairsight.rectorspace.com'),
+  title: {
+    default: 'FairSight — Token Trust Intelligence for Solana',
+    template: '%s | FairSight',
+  },
   description:
     'Analyze the people behind Solana tokens. Deployer reputation, holder quality, and reputation-weighted reviews powered by FairScale.',
   openGraph: {
     title: 'FairSight — Token Trust Intelligence',
     description: 'The Carfax for Solana tokens. Know who you\'re trusting.',
     type: 'website',
+    siteName: 'FairSight',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 };
 
