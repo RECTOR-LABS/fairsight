@@ -113,16 +113,14 @@ Grades: A+ (90-100) → A (80-89) → B (70-79) → C (60-69) → D (50-59) → 
 7. User profile FairScore (on wallet connect)
 8. Embeddable badge (/api/embed/[mint])
 
-## Current Status (Day 2 In Progress — Feb 8)
-- All foundation code written (55+ files)
+## Current Status (Phase 2 Complete — Feb 15)
+- Phase 1: 25/25 complete, Phase 2: 10/10 complete
 - Build passes (`pnpm build` clean)
-- 41 unit tests passing (`pnpm test` — scoring algorithm 100% coverage)
-- Solana wallet-adapter wired up (connect/disconnect + auto-auth + tier badge)
-- Review submission UI live (tier-gated, weighted, integrated)
-- Watchlist bookmark button on token report page
-- Vitest test framework configured
-- Database migrated, Docker dev stack running
-- Pushed to RECTOR-LABS/fairsight (GitHub + GitLab dual-push)
+- 109 tests passing (41 scoring + 68 API/integration tests)
+- Cross-launch intelligence scanner (real status: active/dead/rugged via multi-signal)
+- Batch FairScore optimization (parallel cache check + budget-aware API calls)
+- Error boundaries + loading skeletons on all routes
+- Cron endpoints for proactive cache refresh (CRON_SECRET auth)
+- Responsive design with mobile hamburger nav
 - Branch: `dev` (active development)
-- **Blocking:** Need FairScale + Helius API keys for live data testing (Issue #5)
-- **Remaining Day 2:** E2E testing with real tokens once API keys provided
+- **Next:** Phase 3 — deployment, OG images, SEO, demo video, submission

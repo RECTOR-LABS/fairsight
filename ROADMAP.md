@@ -25,15 +25,15 @@
 
 ## Phase 2: Depth + Differentiation (Week 2: Feb 13-19)
 - [x] Wire up real wallet connect (Solana wallet-adapter provider)
-- [ ] Cross-launch intelligence scanner (Helius tx history for deployer tokens)
-- [ ] Populate deployer_history table from real data
-- [ ] Holder FairScore batch fetching optimization
+- [x] Cross-launch intelligence scanner (Helius tx history for deployer tokens)
+- [x] Populate deployer_history table from real data
+- [x] Holder FairScore batch fetching optimization
 - [x] Review submission UI on token report page
 - [x] Watchlist add/remove buttons on token report page
-- [ ] Responsive design pass (mobile breakpoints)
-- [ ] Error boundaries + loading skeletons
-- [ ] Cron job for cache refresh (/api/cron/)
-- [ ] Integration testing with multiple tokens
+- [x] Responsive design pass (mobile breakpoints)
+- [x] Error boundaries + loading skeletons
+- [x] Cron job for cache refresh (/api/cron/)
+- [x] Integration testing with multiple tokens
 
 ## Phase 3: Polish + Ship (Week 3: Feb 20-27)
 - [ ] VPS deployment (Docker + nginx + certbot + GitHub Actions CI/CD)
