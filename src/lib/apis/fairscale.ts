@@ -124,15 +124,67 @@ export async function getFairScore(wallet: string): Promise<FairScore | null> {
   }
 }
 
+/**
+ * Check Redis + Postgres cache only (no API call, no budget impact).
+ */
+async function getFairScoreCached(wallet: string): Promise<FairScore | null> {
+  const cached = await getCached<FairScore>(CacheKeys.fairScore(wallet));
+  if (cached) return cached;
+
+  const dbCached = await prisma.cachedFairScore.findUnique({
+    where: { wallet },
+  });
+
+  if (dbCached) {
+    const score = dbRowToFairScore(dbCached);
+    // Re-populate Redis regardless of expiry (stale-while-revalidate)
+    await setCached(CacheKeys.fairScore(wallet), score, CacheTTL.FAIRSCORE);
+    return score;
+  }
+
+  return null;
+}
+
 export async function getBatchFairScores(
   wallets: string[],
 ): Promise<Map<string, FairScore>> {
   const results = new Map<string, FairScore>();
+  if (!wallets.length) return results;
 
-  // Sequential to respect budget limits
-  for (const wallet of wallets) {
-    const score = await getFairScore(wallet);
-    if (score) results.set(wallet, score);
+  // Phase 1: Parallel cache check — zero budget consumed
+  const cacheResults = await Promise.all(
+    wallets.map(async (wallet) => ({
+      wallet,
+      score: await getFairScoreCached(wallet),
+    })),
+  );
+
+  const cacheMisses: string[] = [];
+  for (const { wallet, score } of cacheResults) {
+    if (score) {
+      results.set(wallet, score);
+    } else {
+      cacheMisses.push(wallet);
+    }
+  }
+
+  if (!cacheMisses.length) return results;
+
+  // Phase 2: Budget-aware API calls for true cache misses, in groups of 5
+  const API_BATCH_SIZE = 5;
+  for (let i = 0; i < cacheMisses.length; i += API_BATCH_SIZE) {
+    const canCall = await canCallFairScale();
+    if (!canCall) break;
+
+    const batch = cacheMisses.slice(i, i + API_BATCH_SIZE);
+    const batchResults = await Promise.all(
+      batch.map((wallet) => getFairScore(wallet)),
+    );
+
+    for (let j = 0; j < batch.length; j++) {
+      const score = batchResults[j];
+      if (score) results.set(batch[j], score);
+    }
   }
 
   return results;
