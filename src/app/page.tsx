@@ -9,7 +9,7 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [error, setError] = useState('');
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const mint = query.trim();
     if (mint.length < 32) {
@@ -50,11 +50,11 @@ export default function Home() {
                 value={query}
                 onChange={(e) => { setQuery(e.target.value); setError(''); }}
                 placeholder="Paste any Solana token mint address..."
-                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 py-4 pl-12 pr-32 text-white placeholder-zinc-500 transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 py-4 pl-12 pr-4 text-white placeholder-zinc-500 transition-all focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 sm:pr-32"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-500"
+                className="mt-3 w-full rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-500 sm:absolute sm:right-2 sm:top-1/2 sm:mt-0 sm:w-auto sm:-translate-y-1/2"
               >
                 Analyze
                 <ArrowRight className="ml-1.5 inline h-4 w-4" />

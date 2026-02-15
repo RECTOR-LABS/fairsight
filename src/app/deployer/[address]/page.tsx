@@ -62,12 +62,15 @@ export default function DeployerProfilePage({
         </div>
         <div>
           <h1 className="text-xl font-bold text-white">Deployer Profile</h1>
-          <p className="font-mono text-sm text-zinc-500">{address}</p>
+          <p className="font-mono text-sm text-zinc-500 break-all sm:break-normal">
+            <span className="sm:hidden">{address.slice(0, 8)}...{address.slice(-8)}</span>
+            <span className="hidden sm:inline">{address}</span>
+          </p>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-4">
+      <div className="mb-8 grid gap-4 grid-cols-2 sm:grid-cols-4">
         {profile.fairScore && (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
             <p className="text-xs text-zinc-500">FairScore</p>

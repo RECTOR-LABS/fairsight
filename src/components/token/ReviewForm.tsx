@@ -46,7 +46,7 @@ export default function ReviewForm({ tokenMint, onSubmitted }: ReviewFormProps) 
 
   const weight = REVIEW_WEIGHTS[user.fairScoreTier] || 1.0;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (rating === 0) {
       setError('Please select a rating');
