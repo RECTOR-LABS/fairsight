@@ -55,7 +55,7 @@ pnpm dev
 Copy `.env.example` to `.env.local` and fill in API keys:
 
 - `FAIRSCALE_API_KEY` — Get from [FairScale](https://sales.fairscale.xyz)
-- `HELIUS_API_KEY` — Get from [Helius](https://helius.dev)
+- `FAIRSIGHT_HELIUS_API_KEY` — Get from [Helius](https://helius.dev)
 
 ## Deployment
 

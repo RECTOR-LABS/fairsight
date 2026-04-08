@@ -24,7 +24,7 @@ Token trust intelligence platform for Solana, powered by FairScale reputation da
 | Provider | Purpose | Rate Limit | Key Required |
 |---|---|---|---|
 | FairScale | Wallet reputation scores | 1000/mo free | Yes (FAIRSCALE_API_KEY) |
-| Helius | On-chain data, DAS API | 100k credits/mo free | Yes (HELIUS_API_KEY) |
+| Helius | On-chain data, DAS API | 100k credits/mo free | Yes (FAIRSIGHT_HELIUS_API_KEY) |
 | Jupiter | Price, organic score | Unlimited | No |
 | RugCheck | Risk scoring, insider detection | Unlimited | No |
 | GoPlus | Honeypot, taxes, security flags | Unlimited | No |

@@ -1,7 +1,7 @@
 import { trackApiCall } from '../budget';
 
 const HELIUS_URL = process.env.HELIUS_RPC_URL || 'https://mainnet.helius-rpc.com';
-const API_KEY = process.env.HELIUS_API_KEY || '';
+const API_KEY = process.env.FAIRSIGHT_HELIUS_API_KEY || '';
 
 function rpcUrl(): string {
   return `${HELIUS_URL}/?api-key=${API_KEY}`;
